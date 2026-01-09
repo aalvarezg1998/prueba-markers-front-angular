@@ -1,0 +1,93 @@
+.login-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    border-top: 5px solid var(--primary);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo-circle {
+    width: 60px;
+    height: 60px;
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 32px;
+}
+
+.text-muted {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0;
+}
+
+/* Input with Icon Styling */
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon input {
+    padding-left: 2.5rem;
+    /* Space for left icon */
+}
+
+.input-with-icon input.has-right-icon {
+    padding-right: 2.5rem;
+}
+
+.icon-left {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+.icon-right {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    color: var(--primary);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}

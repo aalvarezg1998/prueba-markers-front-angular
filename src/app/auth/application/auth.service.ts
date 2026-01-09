@@ -43,15 +43,12 @@ export class AuthService {
   }
 
   private setUserFromToken(token: string) {
-    // Simple decode for demo (In real app use jwt-decode library or backend response)
-    // We already got role/username in AuthResponse, but here we might refresh from token on reload.
-    // For now, let's assume valid.
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const user: User = {
             sub: payload.sub,
-            role: payload.role, // Ensure custom claim 'role' is in JWT 
-            id: 0 // ID might be in token if we put it there
+            role: payload.role,
+            id: 0
         };
         this.currentUserSubject.next(user);
     } catch (e) {

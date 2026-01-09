@@ -6,10 +6,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
+import { LoadingInterceptor } from './shared/interceptors/loading.interceptor';
+import { LoginComponent } from './auth/ui/login/login.component';
+import { LoanListComponent } from './prestamos/ui/list/loan-list.component';
+import { LoanRequestComponent } from './prestamos/ui/request/loan-request.component';
+import { SpinnerComponent } from './shared/ui/spinner.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    LoanListComponent,
+    LoanRequestComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -19,7 +28,8 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
     ReactiveFormsModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

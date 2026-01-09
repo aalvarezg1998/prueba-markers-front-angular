@@ -1,0 +1,63 @@
+<div class="login-wrapper">
+  <div class="card login-card animate-fade-in">
+    <div class="login-header">
+      <div class="logo-circle">
+        <i class='bx bxs-user-pin'></i>
+      </div>
+      <h2>Bienvenido</h2>
+      <p class="text-muted">Por favor inicia sesión para continuar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label class="form-label">Usuario</label>
+        <div class="input-with-icon">
+          <i class='bx bx-user icon-left'></i>
+          <input 
+            formControlName="username" 
+            type="text" 
+            class="form-control" 
+            placeholder="Ingresa tu usuario"
+          />
+        </div>
+        <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid" class="error-text">
+          El usuario es requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <div class="input-with-icon">
+          <i class='bx bx-lock-alt icon-left'></i>
+          <input 
+            formControlName="password" 
+            [type]="showPassword ? 'text' : 'password'" 
+            class="form-control" 
+            placeholder="Ingresa tu contraseña"
+          />
+          <i 
+            class='bx' 
+            [ngClass]="showPassword ? 'bx-show' : 'bx-hide'" 
+            class="icon-right clickable"
+            (click)="togglePassword()">
+          </i>
+        </div>
+         <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error-text">
+          La contraseña es requerida
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" [disabled]="loginForm.invalid || isLoading">
+        <i *ngIf="isLoading" class='bx bx-loader-alt bx-spin'></i>
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+        <i *ngIf="!isLoading" class='bx bx-right-arrow-alt'></i>
+      </button>
+
+    </form>
+  </div>
+</div>

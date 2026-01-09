@@ -1,0 +1,72 @@
+<div class="loans-container animate-fade-in">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>
+        <i class='bx bx-wallet'></i>
+        {{ isAdmin() ? 'Gestión de Préstamos' : 'Mis Préstamos' }}
+      </h1>
+      <p class="subtitle">{{ isAdmin() ? 'Administra todas las solicitudes' : 'Consulta tus solicitudes de préstamo' }}</p>
+    </div>
+    <button *ngIf="!isAdmin()" routerLink="/request-loan" class="btn btn-primary">
+      <i class='bx bx-plus'></i> Nuevo Préstamo
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="loans.length === 0" class="empty-state">
+    <i class='bx bx-wallet empty-icon'></i>
+    <h3>No hay préstamos</h3>
+    <p>{{ isAdmin() ? 'Aún no hay solicitudes registradas' : 'No tienes solicitudes de préstamo' }}</p>
+    <button *ngIf="!isAdmin()" routerLink="/request-loan" class="btn btn-primary">
+      <i class='bx bx-plus'></i> Solicitar Préstamo
+    </button>
+  </div>
+
+  <!-- Loans Grid -->
+  <div *ngIf="loans.length > 0" class="loans-grid">
+    <div *ngFor="let loan of loans" class="loan-card">
+      <div class="loan-header">
+        <div class="loan-id">
+          <i class='bx bx-hash'></i> {{ loan.id }}
+        </div>
+        <span class="loan-badge" [ngClass]="'badge-' + loan.status.toLowerCase()">
+          <i class='bx' [ngClass]="getStatusIcon(loan.status)"></i> {{ getStatusLabel(loan.status) }}
+        </span>
+      </div>
+
+      <div class="loan-body">
+        <div class="loan-amount">
+          <span class="amount-value">{{ loan.amount | currency:'USD':'symbol':'1.2-2' }}</span>
+          <span class="amount-label">Monto Solicitado</span>
+        </div>
+
+        <div class="loan-info">
+          <div class="info-item">
+            <i class='bx bx-calendar'></i>
+            <div>
+              <span class="info-label">Plazo</span>
+              <span class="info-value">{{ loan.term }} meses</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="isAdmin()">
+            <i class='bx bx-user'></i>
+            <div>
+              <span class="info-label">Usuario</span>
+              <span class="info-value">ID: {{ loan.userId }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loan-actions" *ngIf="isAdmin() && loan.status === 'PENDING'">
+        <button (click)="approve(loan.id)" class="btn btn-success">
+          <i class='bx bx-check-circle'></i> Aprobar
+        </button>
+        <button (click)="reject(loan.id)" class="btn btn-danger">
+          <i class='bx bx-x-circle'></i> Rechazar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

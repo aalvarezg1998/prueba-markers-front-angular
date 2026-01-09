@@ -5,33 +5,13 @@ import { AuthService } from '../../application/auth.service';
 
 @Component({
   selector: 'app-login',
-  template: `
-    <div class="login-container">
-      <h2>Login</h2>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div>
-          <label>Username</label>
-          <input formControlName="username" type="text" />
-        </div>
-        <div>
-          <label>Password</label>
-          <input formControlName="password" type="password" />
-        </div>
-        <button type="submit" [disabled]="loginForm.invalid">Login</button>
-      </form>
-    </div>
-  `,
-  styles: [`
-    .login-container { max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-    div { margin-bottom: 10px; }
-    label { display: block; margin-bottom: 5px; }
-    input { width: 100%; padding: 8px; }
-    button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-    button:disabled { background-color: #ccc; }
-  `]
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  showPassword = false;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -44,12 +24,26 @@ export class LoginComponent {
     });
   }
 
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
-        next: () => this.router.navigate(['/dashboard']),
-        error: (err) => alert('Login failed')
-      });
+      this.isLoading = true;
+      // Simulate network delay for effect
+      setTimeout(() => {
+        this.authService.login(this.loginForm.value).subscribe({
+          next: () => {
+            this.router.navigate(['/dashboard']);
+            this.isLoading = false;
+          },
+          error: (err) => {
+            alert('Error al iniciar sesión');
+            this.isLoading = false;
+          }
+        });
+      }, 800);
     }
   }
 }

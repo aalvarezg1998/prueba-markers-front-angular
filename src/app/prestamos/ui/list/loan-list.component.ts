@@ -5,52 +5,8 @@ import { AuthService } from '../../../auth/application/auth.service';
 
 @Component({
   selector: 'app-loan-list',
-  template: `
-    <div class="container">
-      <h2>Mis Préstamos / Gestión</h2>
-      <button *ngIf="!isAdmin()" routerLink="/request-loan" class="btn-new">Nuevo Préstamo</button>
-      
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Monto</th>
-            <th>Plazo</th>
-            <th>Estado</th>
-            <th *ngIf="isAdmin()">Usuario ID</th>
-            <th *ngIf="isAdmin()">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let loan of loans">
-            <td>{{ loan.id }}</td>
-            <td>{{ loan.amount | currency }}</td>
-            <td>{{ loan.term }} meses</td>
-            <td [ngClass]="loan.status.toLowerCase()">{{ loan.status }}</td>
-            <td *ngIf="isAdmin()">{{ loan.userId }}</td>
-            <td *ngIf="isAdmin()">
-              <div *ngIf="loan.status === 'PENDING'">
-                <button (click)="approve(loan.id)" class="btn-approve">Aprobar</button>
-                <button (click)="reject(loan.id)" class="btn-reject">Rechazar</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  `,
-  styles: [`
-    .container { padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .pending { color: orange; font-weight: bold; }
-    .approved { color: green; font-weight: bold; }
-    .rejected { color: red; font-weight: bold; }
-    .btn-new { padding: 10px 20px; background: #007bff; color: white; border: none; margin-bottom: 20px; cursor: pointer;}
-    .btn-approve { background: green; color: white; border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer; }
-    .btn-reject { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; }
-  `]
+  templateUrl: './loan-list.component.html',
+  styleUrls: ['./loan-list.component.css']
 })
 export class LoanListComponent implements OnInit {
   loans: Loan[] = [];
@@ -82,5 +38,23 @@ export class LoanListComponent implements OnInit {
 
   reject(id: number) {
     this.loanService.rejectLoan(id).subscribe(() => this.loadLoans());
+  }
+
+  getStatusIcon(status: string): string {
+    const icons: { [key: string]: string } = {
+      'PENDING': 'bx-time-five',
+      'APPROVED': 'bx-check-circle',
+      'REJECTED': 'bx-x-circle'
+    };
+    return icons[status] || 'bx-help-circle';
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: { [key: string]: string } = {
+      'PENDING': 'Pendiente',
+      'APPROVED': 'Aprobado',
+      'REJECTED': 'Rechazado'
+    };
+    return labels[status] || status;
   }
 }

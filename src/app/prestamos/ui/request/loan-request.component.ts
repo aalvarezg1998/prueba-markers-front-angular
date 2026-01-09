@@ -5,33 +5,13 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-loan-request',
-  template: `
-    <div class="container">
-      <h2>Solicitar Préstamo</h2>
-      <form [formGroup]="loanForm" (ngSubmit)="onSubmit()">
-        <div>
-          <label>Monto</label>
-          <input formControlName="amount" type="number" />
-        </div>
-        <div>
-          <label>Plazo (Meses)</label>
-          <input formControlName="term" type="number" />
-        </div>
-        <button type="submit" [disabled]="loanForm.invalid">Solicitar</button>
-      </form>
-    </div>
-  `,
-  styles: [`
-    .container { max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #eee; }
-    div { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; }
-    input { width: 100%; padding: 8px; }
-    button { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; }
-    button:disabled { background: #ccc; }
-  `]
+  templateUrl: './loan-request.component.html',
+  styleUrls: ['./loan-request.component.css']
 })
 export class LoanRequestComponent {
   loanForm: FormGroup;
+  isSubmitting = false;
+  termOptions = [6, 12, 18, 24, 36, 48];
 
   constructor(
     private fb: FormBuilder,
@@ -44,15 +24,41 @@ export class LoanRequestComponent {
     });
   }
 
+  selectTerm(term: number) {
+    this.loanForm.patchValue({ term });
+  }
+
+  calculateMonthlyPayment(): number {
+    const amount = this.loanForm.get('amount')?.value || 0;
+    const term = this.loanForm.get('term')?.value || 1;
+    
+    // Simple calculation (amount / term) - replace with actual interest calculation if needed
+    const interestRate = 0.05; // 5% annual interest
+    const monthlyRate = interestRate / 12;
+    const payment = (amount * monthlyRate * Math.pow(1 + monthlyRate, term)) / 
+                    (Math.pow(1 + monthlyRate, term) - 1);
+    
+    return isNaN(payment) ? 0 : payment;
+  }
+
   onSubmit() {
     if (this.loanForm.valid) {
-      this.loanService.requestLoan(this.loanForm.value).subscribe({
-        next: () => {
-          alert('Solicitud enviada exitosamente');
-          this.router.navigate(['/loans']);
-        },
-        error: () => alert('Error al solicitar el préstamo')
-      });
+      this.isSubmitting = true;
+      
+      // Simulate network delay
+      setTimeout(() => {
+        this.loanService.requestLoan(this.loanForm.value).subscribe({
+          next: () => {
+            alert('✅ Solicitud enviada exitosamente');
+            this.router.navigate(['/loans']);
+            this.isSubmitting = false;
+          },
+          error: () => {
+            alert('❌ Error al solicitar el préstamo');
+            this.isSubmitting = false;
+          }
+        });
+      }, 800);
     }
   }
 }

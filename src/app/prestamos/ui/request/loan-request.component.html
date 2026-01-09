@@ -1,0 +1,104 @@
+<div class="request-container animate-fade-in">
+  <div class="request-card card">
+    <!-- Header -->
+    <div class="request-header">
+      <div class="header-icon">
+        <i class='bx bxs-hand-up'></i>
+      </div>
+      <h2>Solicitar Préstamo</h2>
+      <p class="subtitle">Completa la información para solicitar tu préstamo</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loanForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label class="form-label">
+          <i class='bx bx-money'></i> Monto del Préstamo
+        </label>
+        <div class="input-with-currency">
+          <span class="currency-symbol">$</span>
+          <input 
+            formControlName="amount" 
+            type="number" 
+            class="form-control currency-input" 
+            placeholder="0.00"
+            min="1"
+          />
+        </div>
+        <div *ngIf="loanForm.get('amount')?.touched && loanForm.get('amount')?.invalid" class="error-text">
+          <span *ngIf="loanForm.get('amount')?.errors?.['required']">El monto es requerido</span>
+          <span *ngIf="loanForm.get('amount')?.errors?.['min']">El monto debe ser mayor a 0</span>
+        </div>
+        <div class="helper-text">
+          Ingresa el monto que deseas solicitar
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <i class='bx bx-calendar'></i> Plazo del Préstamo
+        </label>
+        <div class="term-selector">
+          <button 
+            type="button"
+            *ngFor="let term of termOptions" 
+            class="term-option"
+            [class.selected]="loanForm.get('term')?.value === term"
+            (click)="selectTerm(term)"
+          >
+            <span class="term-value">{{ term }}</span>
+            <span class="term-label">meses</span>
+          </button>
+        </div>
+        <div *ngIf="loanForm.get('term')?.touched && loanForm.get('term')?.invalid" class="error-text">
+          Debes seleccionar un plazo
+        </div>
+        <div class="helper-text">
+          Selecciona el plazo en meses
+        </div>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="summary-card" *ngIf="loanForm.get('amount')?.value && loanForm.get('term')?.value">
+        <h3>
+          <i class='bx bx-receipt'></i> Resumen del Préstamo
+        </h3>
+        <div class="summary-items">
+          <div class="summary-item">
+            <span class="summary-label">Monto Total</span>
+            <span class="summary-value primary">{{ loanForm.get('amount')?.value | currency:'USD':'symbol':'1.2-2' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Plazo</span>
+            <span class="summary-value">{{ loanForm.get('term')?.value }} meses</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Cuota Mensual Estimada</span>
+            <span class="summary-value highlight">{{ calculateMonthlyPayment() | currency:'USD':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-outline" 
+          routerLink="/loans"
+        >
+          <i class='bx bx-left-arrow-alt'></i> Cancelar
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="loanForm.invalid || isSubmitting"
+        >
+          <i *ngIf="isSubmitting" class='bx bx-loader-alt bx-spin'></i>
+          <span *ngIf="!isSubmitting">Enviar Solicitud</span>
+          <i *ngIf="!isSubmitting" class='bx bx-send'></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
